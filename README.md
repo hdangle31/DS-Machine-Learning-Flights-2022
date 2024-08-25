@@ -8,4 +8,8 @@ The project consists of two parts:
 
 
 ## I. Data Manipulation, EDA and Visualizations <br>
+![Top 9 Routes by Highest Avg Departure Delay](./Top-9-Dep-Delay.png)
+![Top 9 Airlines by No. Cancellations](./Top-9-Cancellations.png)
+
 ## II. Naive Bayes Classifier to Predict Flight Cancellations
+![Confusion Matrix](./Conf-Matrx.png)
