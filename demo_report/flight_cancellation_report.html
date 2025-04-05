@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -100,97 +99,160 @@
             <li>Time period: 1-6/2022</li>
         </ul>
     
-        <h2>2. Cancellation Patterns Analysis</h2>
+        <h2>2. Arrival & Departure Delay Deep-Dive</h2>
         
-        <h3>2.1 Temporal Patterns</h3>
+        <p>Before examining cancellation patterns, it's important to understand the broader context of flight delays, 
+        which often precede and contribute to cancellations. This analysis examines delay patterns across different
+        dimensions including time, airports, and routes.</p>
+        
+        <h3>2.1 Temporal Delay Patterns</h3>
+        <p>Delay patterns vary significantly by day of week and time of day, revealing operational challenges
+        during specific periods.</p>
+        
+        <div class="image-container">
+            <img src="../insights/initial_insights/dep-arr-delay-dow.png" alt="Departure & Arrival Average Delay Over Time">
+            <p><em>Figure 1: Departure & Arrival Average Delay By Day of Week</em></p>
+        </div>
+        
+        <div class="image-container">
+            <img src="../insights/initial_insights/dep-arr-delay-ot.png" alt="Departure & Arrival Average Delay By Day of Week">
+            <p><em>Figure 2: Departure & Arrival Average Delay Over Time</em></p>
+        </div>
+        
+        <h3>2.2 Airport-Specific Delay Analysis</h3>
+        <p>Different airports experience varying delay patterns based on their geographic location, traffic volume,
+        and operational efficiency.</p>
+        
+        <div class="image-container">
+            <img src="../insights/initial_insights/top-5-arr-dest.png" alt="Top 5 Destinations with Highest Average Arrival Delay">
+            <p><em>Figure 3: Top 5 Destinations with Highest Average Arrival Delay</em></p>
+        </div>
+        
+        <div class="image-container">
+            <img src="../insights/initial_insights/org-dep.png" alt="Average Departure Delay By Origins">
+            <p><em>Figure 4: Average Departure Delay By Origins</em></p>
+        </div>
+        
+        <h3>2.3 Flight Volume and Route Analysis</h3>
+        <p>Monthly variations in flight volume and differences between scheduled and actual flight durations 
+        provide insights into systemic operational challenges.</p>
+        
+        <div class="image-container">
+            <img src="../insights/initial_insights/flights-by-month.png" alt="Number of Flights by Month">
+            <p><em>Figure 5: Number of Flights by Month</em></p>
+        </div>
+        
+        <div class="image-container">
+            <img src="../insights/initial_insights/top-5-routes-dur-diff.png" alt="Top 5 Routes with Highest Average Duration Difference">
+            <p><em>Figure 6: Top 5 Routes with Highest Average Duration Difference</em></p>
+        </div>
+        
+        <h2>3. Cancellation Patterns Analysis</h2>
+        
+        <h3>3.1 Temporal Patterns</h3>
         <p>Flight cancellations show distinct patterns across different time dimensions, including months, days of the week,
         and hours of the day. These patterns provide insights into operational challenges and potential factors affecting cancellations.</p>
         
         <div class="image-container">
             <img src="../visualizations/cancellations_by_time.png" alt="Cancellation Patterns by Time">
-            <p><em>Figure 1: Cancellation rates by month, day of week, hour, and season</em></p>
+            <p><em>Figure 7: Cancellation rates by month, day of week, hour, and season</em></p>
         </div>
 
-        <h3>2.2 Weather-Related Patterns</h3>
+        <h3>3.2 Weather-Related Patterns</h3>
         <p>Weather conditions significantly impact flight operations. The analysis examines how different weather factors,
         such as temperature, visibility, precipitation, and wind, correlate with flight cancellations.</p>
         
         <div class="image-container">
             <img src="../visualizations/cancellations_by_weather.png" alt="Cancellation Patterns by Weather">
-            <p><em>Figure 2: Cancellation rates by weather conditions</em></p>
+            <p><em>Figure 8: Cancellation rates by weather conditions</em></p>
         </div>
 
-        <h3>2.3 Airline and Distance Analysis</h3>
+        <h3>3.3 Airline and Distance Analysis</h3>
         <p>Different airlines have varying operational practices and fleet characteristics, resulting in different
         cancellation rates. Similarly, flight distance can affect cancellation probabilities due to operational complexity
         and exposure to changing weather conditions along the route.</p>
         
         <div class="image-container">
             <img src="../visualizations/cancellations_by_distance_airline.png" alt="Cancellation Patterns by Distance and Airline">
-            <p><em>Figure 3: Cancellation rates by flight distance and airline</em></p>
+            <p><em>Figure 9: Cancellation rates by flight distance and airline</em></p>
         </div>
 
-        <h2>3. Predictive Factors</h2>
+        <h2>4. Predictive Factors</h2>
         
-        <h3>3.1 Feature Importance</h3>
+        <h3>4.1 Feature Importance</h3>
         <p>Machine learning models identify the most influential factors in predicting flight cancellations. 
         Understanding these factors helps prioritize operational improvements and develop more effective predictive models.</p>
         
         <div class="image-container">
             <img src="../visualizations/feature_importance.png" alt="Feature Importance">
-            <p><em>Figure 4: Top features for predicting flight cancellations using different importance metrics</em></p>
+            <p><em>Figure 10: Top features for predicting flight cancellations using different importance metrics</em></p>
         </div>
         
-        <h3>3.2 Feature Relationships</h3>
+        <h3>4.2 Feature Relationships</h3>
         <p>The relationships between features provide additional insights into how different factors interact to affect
         cancellation probability. The pairplot below shows relationships between the top predictive features.</p>
         
         <div class="image-container">
             <img src="../visualizations/top_features_pairplot.png" alt="Feature Relationships">
-            <p><em>Figure 5: Relationships between top predictive features</em></p>
+            <p><em>Figure 11: Relationships between top predictive features</em></p>
         </div>
         
-        <h3>3.3 Correlation Analysis</h3>
+        <h3>4.3 Correlation Analysis</h3>
         <p>Correlation analysis reveals how different features relate to each other and to flight cancellations.
         Strong correlations can indicate redundant information or potential causal relationships.</p>
         
         <div class="image-container">
             <img src="../visualizations/correlation_heatmap.png" alt="Correlation Heatmap">
-            <p><em>Figure 6: Correlation heatmap of numerical features</em></p>
+            <p><em>Figure 12: Correlation heatmap of numerical features</em></p>
         </div>
 
-        <h3>3.4 Model Performance</h3>
+        <h3>4.4 Model Performance</h3>
         <p>We evaluated multiple machine learning models for predicting flight cancellations. The chart below
         compares the accuracy of these models.</p>
         
         <div class="image-container">
-            <img src="../images/model_evaluation/model_comparison.png" alt="Model Comparison">
-            <p><em>Figure 7: Performance comparison of different prediction models</em></p>
+            <img src="../visualizations/model_comparison_all_metrics.png" alt="Model Comparison">
+            <p><em>Figure 13: Performance comparison of different prediction models</em></p>
         </div>
 
-        <h2>4. Predictive Models</h2>
+        <h2>5. Predictive Models</h2>
         
-        <h3>4.1 Model Performance Comparison</h3>
+        <h3>5.1 Model Performance Comparison</h3>
         <p>Various machine learning models were trained to predict flight cancellations. The performance comparison
         helps identify the most effective modeling approaches for this prediction task.</p>
         
         <div class="image-container">
-            <img src="../images/model_evaluation/model_comparison.png" alt="Model Comparison">
-            <p><em>Figure 7: Performance comparison of different machine learning models</em></p>
+            <img src="../visualizations/model_comparison_metrics_combined.png" alt="Model Comparison">
+            <p><em>Figure 14: Performance comparison of different machine learning models</em></p>
         </div>
 
-        <h3>4.2 Model Evaluation Details</h3>
+        <h3>5.2 Model Evaluation Details</h3>
         <p>Confusion matrices provide detailed insights into model performance, showing true positives, false positives,
         true negatives, and false negatives. This helps understand the types of errors each model makes.</p>
         
         <div class="image-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
-
+            <div style="margin: 10px; flex: 1 1 45%;">
+                <img src="../visualizations/confusion_matrix_naive_bayes.png" alt="Naive Bayes Confusion Matrix">
+                <p><em>Figure 15a: Naive Bayes model confusion matrix</em></p>
+            </div>
+            <div style="margin: 10px; flex: 1 1 45%;">
+                <img src="../visualizations/confusion_matrix_random_forest.png" alt="Random Forest Confusion Matrix">
+                <p><em>Figure 15b: Random Forest model confusion matrix</em></p>
+            </div>
+            <div style="margin: 10px; flex: 1 1 45%;">
+                <img src="../visualizations/confusion_matrix_gradient_boosting.png" alt="Gradient Boosting Confusion Matrix">
+                <p><em>Figure 15c: Gradient Boosting model confusion matrix</em></p>
+            </div>
+            <div style="margin: 10px; flex: 1 1 45%;">
+                <img src="../visualizations/confusion_matrix_logistic_regression.png" alt="Logistic Regression Confusion Matrix">
+                <p><em>Figure 15d: Logistic Regression model confusion matrix</em></p>
+            </div>
         </div>
 
-        <h2>5. Interpretations and Recommendations</h2>
+        <h2>6. Interpretations and Recommendations</h2>
         
         <div class="highlight">
-            <h3>5.1 Key Insights</h3>
+            <h3>6.1 Key Insights</h3>
             <ul>
                 <li>Flight duration and air time are the strongest predictors of cancellations, suggesting that longer flights 
                     may be more prone to cancellation due to complex planning and increased exposure to changing conditions.</li>
@@ -202,7 +264,7 @@
             </ul>
         </div>
         
-        <h3>5.2 Operational Recommendations</h3>
+        <h3>6.2 Operational Recommendations</h3>
         <ul>
             <li><strong>Proactive Delay Management:</strong> Since delays correlate strongly with cancellations, implementing 
                 more effective delay management strategies could help reduce cancellation rates.</li>
@@ -216,7 +278,7 @@
                 Gradient Boosting) for early cancellation prediction to improve passenger notification and resource reallocation.</li>
         </ul>
         
-        <h3>5.3 Further Research Opportunities</h3>
+        <h3>6.3 Further Research Opportunities</h3>
         <ul>
             <li>Develop more detailed analysis of specific routes and airports to identify localized cancellation patterns.</li>
             <li>Investigate the relationship between aircraft type and cancellation probability.</li>
@@ -224,7 +286,7 @@
             <li>Analyze the economic impact of different cancellation prediction and management strategies.</li>
         </ul>
 
-        <h2>6. Conclusion</h2>
+        <h2>7. Conclusion</h2>
         <p>Flight cancellations can be predicted with reasonable accuracy using machine learning models, with the most effective 
         models achieving significant predictive power. The analysis reveals that a combination of operational factors (flight duration, 
         delays) and environmental conditions (weather parameters) strongly influence cancellation probability.</p>
@@ -234,7 +296,7 @@
         in this analysis can serve as valuable tools for proactive flight management and resource allocation.</p>
         
         <div class="footer">
-            <p>Report generated on 2025-04-05 01:58:43</p>
+            <p>Report generated on 2023-04-05</p>
             <p>Flight Cancellation Prediction Analysis</p>
         </div>
     </div>

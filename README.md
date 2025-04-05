@@ -46,12 +46,12 @@ The dataset contains the following variables:
 <!-- ![Top 9 Routes by Highest Avg Departure Delay](./Top-9-Dep-Delay.png)
 ![Top 9 Airlines by No. Cancellations](./Top-9-Cancellations.png) -->
 
-![Departure & Arrival Average Delay Over Time](./images/initial_insights/dep-arr-delay-dow.png)
-![Departure & Arrival Average Delay By Day of Week](./images/initial_insights/dep-arr-delay-ot.png)
-![Top 5 Destinations with Highest Average Arrival Delay](./images/initial_insights/top-5-arr-dest.png)
-![Average Departure Delay By Origins](./images/initial_insights/org-dep.png)
-![Number of Flights by Month](./images/initial_insights/flights-by-month.png)
-![Top 5 Routes with Highest Average Duration Difference](./images/initial_insights/top-5-routes-dur-diff.png)
+![Departure & Arrival Average Delay Over Time](./insights/initial_insights/dep-arr-delay-dow.png)
+![Departure & Arrival Average Delay By Day of Week](./insights/initial_insights/dep-arr-delay-ot.png)
+![Top 5 Destinations with Highest Average Arrival Delay](./insights/initial_insights/top-5-arr-dest.png)
+![Average Departure Delay By Origins](./insights/initial_insights/org-dep.png)
+![Number of Flights by Month](./insights/initial_insights/flights-by-month.png)
+![Top 5 Routes with Highest Average Duration Difference](./insights/initial_insights/top-5-routes-dur-diff.png)
 
 
 ### Key Findings from Analysis
@@ -66,8 +66,8 @@ The dataset contains the following variables:
 ## II. Cancellation Rate Deep-Dive <br>
 
 ### Routes & Airlines Analysis
-![Top 5 Routes with Highest Cancellation Rate](./images/initial_insights/top-5-cancel-route.png)
-![Top 5 Airlines with Highest Cancellation Rate](./images/initial_insights/top-5-cancel-airline.png)
+![Top 5 Routes with Highest Cancellation Rate](./insights/initial_insights/top-5-cancel-route.png)
+![Top 5 Airlines with Highest Cancellation Rate](./insights/initial_insights/top-5-cancel-airline.png)
 
 ### Time-Based Patterns
 Flight cancellations show distinct patterns across different time dimensions, including months, days of the week, and hours of the day. These patterns provide insights into operational challenges and potential factors affecting cancellations.
