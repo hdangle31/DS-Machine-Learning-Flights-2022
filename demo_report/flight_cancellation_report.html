@@ -73,19 +73,6 @@
         The dataset contains information about flights in 2022, including various features related to flight schedules, 
         weather conditions, and cancellation status.</p>
         
-        <div class="highlight">
-            <h3>Key Findings Summary</h3>
-            <ul>
-                <li>The dataset contains 110,878 flight records with a cancellation rate of 
-                2.09%.</li>
-                <li>Machine learning models can predict flight cancellations with significant accuracy.</li>
-                <li>The most important features for predicting cancellations include flight duration, arrival/departure delays, 
-                and weather-related factors like humidity and pressure.</li>
-                <li>Different airlines and routes have varying cancellation rates, suggesting operational differences.</li>
-                <li>Seasonal patterns and day-of-week variations exist in flight cancellations.</li>
-            </ul>
-        </div>
-        
         <h2>1. Dataset Overview</h2>
         <p>The analysis uses the flights2022_cleaned.csv dataset, which contains flight data with weather information 
         and other relevant features. The dataset has been cleaned and preprocessed to handle missing values and 
@@ -201,16 +188,8 @@
             <p><em>Figure 10: Top features for predicting flight cancellations using different importance metrics</em></p>
         </div>
         
-        <h3>4.2 Feature Relationships</h3>
-        <p>The relationships between features provide additional insights into how different factors interact to affect
-        cancellation probability. The pairplot below shows relationships between the top predictive features.</p>
         
-        <div class="image-container">
-            <img src="../visualizations/top_features_pairplot.png" alt="Feature Relationships">
-            <p><em>Figure 11: Relationships between top predictive features</em></p>
-        </div>
-        
-        <h3>4.3 Correlation Analysis</h3>
+        <h3>4.2 Correlation Analysis</h3>
         <p>Correlation analysis reveals how different features relate to each other and to flight cancellations.
         Strong correlations can indicate redundant information or potential causal relationships.</p>
         
@@ -219,14 +198,6 @@
             <p><em>Figure 12: Correlation heatmap of numerical features</em></p>
         </div>
 
-        <h3>4.4 Model Performance</h3>
-        <p>We evaluated multiple machine learning models for predicting flight cancellations. The chart below
-        compares the accuracy of these models.</p>
-        
-        <div class="image-container">
-            <img src="../visualizations/model_comparison_all_metrics.png" alt="Model Comparison">
-            <p><em>Figure 13: Performance comparison of different prediction models</em></p>
-        </div>
 
         <h2>5. Predictive Models</h2>
         
@@ -299,17 +270,29 @@
             <li>Analyze the economic impact of different cancellation prediction and management strategies.</li>
         </ul>
 
-        <h2>7. Conclusion</h2>
-        <p>Flight cancellations can be predicted with reasonable accuracy using machine learning models, with the most effective 
-        models achieving significant predictive power. The analysis reveals that a combination of operational factors (flight duration, 
-        delays) and environmental conditions (weather parameters) strongly influence cancellation probability.</p>
-        
+        <div class="highlight">
+            <h3>Conclusion</h3>
+            <ul>
+                <li>Flight cancellations can be predicted with reasonable accuracy using machine learning models, with the most effective 
+                    models achieving significant predictive power. The analysis reveals that a combination of operational factor (distance)
+                    and environmental conditions (weather parameters) strongly influence cancellation probability.</li>
+                <li>The analysis reveals the challenge of predicting rare events like flight cancellations, which occur in only about 2% of flights in our dataset. 
+                    While all models achieve high accuracy due to this class imbalance, the Random Forest model provides the best overall performance when considering the more meaningful F1-Score metric. 
+                <li>The feature importance analysis confirms that weather-related factors (particularly pressure and visibility) along with flight distance are the most critical predictors, 
+                    highlighting areas where airlines can focus their operational improvements to minimize cancellations. 
+                <li>It's worth noting that even with the best model, the relatively low F1-Score (0.2509) indicates that predicting flight cancellations remains challenging, likely due to the complex and sometimes
+                    unpredictable nature of factors contributing to cancellations.
+                <li>Future work could explore ensemble approaches, additional feature engineering, or addressing the class imbalance through techniques like oversampling or undersampling.</li>
+            </ul>
+        </div>
+
+
         <p>By implementing the recommendations provided in this report, airlines and airport operators can potentially reduce 
         cancellation rates, improve operational efficiency, and enhance passenger experience. The predictive models developed 
         in this analysis can serve as valuable tools for proactive flight management and resource allocation.</p>
         
         <div class="footer">
-            <p>Report generated on 2023-04-05</p>
+            <p>Report generated by &copy; Dang Le</p>
             <p>Flight Cancellation Prediction Analysis</p>
         </div>
     </div>
