@@ -55,12 +55,13 @@ The dataset contains the following variables:
 
 
 ### Key Findings from Analysis
-- The dataset contains **110,878 flight records** with a **cancellation rate of 2.09%**
-- Weather factors significantly impact cancellations, particularly humidity, pressure, and precipitation
-- Different airlines show varying cancellation rates, suggesting differences in operational robustness
-- Seasonal patterns exist in cancellation rates, with certain months showing higher rates
-- Flight duration and air time are strong predictors of cancellations, suggesting longer flights may be more prone to cancellation
-- Arrival and departure delays strongly correlate with cancellations, indicating that operational disruptions tend to cascade
+- The transformed dataset contains **110,878 flight records** with a **cancellation rate of 2.09%**
+- **June** is the busiest month with **20,120 flights**, where as **February** records lowest number of flights at **16,014 flights**
+- Looking at **average daily arrival** delay from 2022-01 to 2022-07, on the best day, planes arrive **9 minutes 57 seconds** sooner than scheduled, while for the worst performing day planes are delayed up to **44 minutes 40 seconds**  
+- Weekly analysis finds that on average, planes that depart on **Sunday** delay the most at **10 minutes 42 seconds** from scheduled departure, while planes on Tuesday arrive **1 minute 36 seconds** soonder than scheduled 
+- Planes departing to **DSM** records highest number of arrival delays, at **32 minutes and 30 seconds** on average
+- Flights from **PDX** on average performs better than from **SEA** with **54 seconds** difference in **departure delay** 
+- Flights from **PDX to GRR** are recorded to have highest deviation of estimated duration to scheduled duration, at **55 minutes and 12 seconds**
 
 
 ## II. Cancellation Rate Deep-Dive <br>
