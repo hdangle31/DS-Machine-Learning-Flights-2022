@@ -1,4 +1,3 @@
-
 FLIGHT CANCELLATION PREDICTION ANALYSIS - EXECUTIVE SUMMARY
 ==========================================================
 
@@ -8,34 +7,56 @@ FLIGHT CANCELLATION PREDICTION ANALYSIS - EXECUTIVE SUMMARY
 - Dataset contains 110,878 flight records from 2022
 - Cancellation rate is 2.09%
 - 40 features including flight details, weather conditions, and operational metrics
+- Primary focus on flights from major Pacific Northwest airports (SEA, PDX)
 
-2. KEY FINDINGS
+2. ARRIVAL & DEPARTURE DELAY ANALYSIS
+-----------------------------------
+- Significant day-of-week patterns observed in both arrival and departure delays
+- Delays show distinct temporal patterns throughout the day and across months
+- Certain destinations consistently show higher average arrival delays
+- Origin airports have varying departure delay profiles
+- Monthly flight volume variations impact overall system performance
+- Routes with highest duration differences indicate potential scheduling issues
+
+3. KEY FINDINGS
 --------------
 - Most important predictors of cancellations: flight duration, air time, arrival/departure delays
-- Weather factors significantly impact cancellations, particularly humidity and pressure
+- Weather factors significantly impact cancellations, particularly humidity, pressure, and precipitation
 - Different airlines show varying cancellation rates, suggesting operational differences
 - Seasonal patterns exist in cancellation rates
-- Machine learning models (especially tree-based models) can predict cancellations with good accuracy
+- Machine learning models (especially Random Forest) can predict cancellations with reasonable accuracy
 
-3. MODEL PERFORMANCE
+4. MODEL PERFORMANCE
 ------------------
 - Multiple models evaluated: Naive Bayes, Random Forest, Gradient Boosting, Logistic Regression
-- Tree-based models (Random Forest, Gradient Boosting) generally performed best
-- Feature engineering and hyperparameter tuning improved model performance
+- Random Forest achieved the best F1-Score (0.2509), providing balanced performance
+- Feature importance analysis confirms weather factors and flight distance as critical predictors
+- Visual representations available in visualizations/model_comparison_all_metrics.png and visualizations/feature_importance.png
 
-4. RECOMMENDATIONS
+5. RECOMMENDATIONS
 ----------------
-- Implement proactive delay management strategies
-- Develop more sophisticated weather contingency plans
+- Implement proactive delay management strategies to prevent cascading cancellations
+- Develop more sophisticated weather contingency plans focused on humidity, precipitation, and pressure changes
 - Address airline-specific operational issues for carriers with high cancellation rates
-- Allocate additional resources during seasons with higher cancellation rates
-- Deploy machine learning models for early cancellation prediction
+- Allocate additional resources during seasons with historically higher cancellation rates
+- Deploy machine learning models (particularly Random Forest) for early cancellation prediction
 
-5. NEXT STEPS
+6. NEXT STEPS
 -----------
 - Analyze specific routes and airports for localized patterns
 - Investigate aircraft type impact on cancellations
 - Explore staffing and crew scheduling effects
 - Analyze economic impact of different cancellation management strategies
 
-Report generated on 2025-04-05 01:58:44
+Visualizations referenced in this summary can be found in:
+- Delay analysis: insights/initial_insights/dep-arr-delay-dow.png, insights/initial_insights/dep-arr-delay-ot.png
+- Route analysis: insights/initial_insights/top-5-arr-dest.png, insights/initial_insights/top-5-routes-dur-diff.png
+- Airport analysis: insights/initial_insights/org-dep.png
+- Flight distribution: insights/initial_insights/flights-by-month.png
+- Time-based patterns: visualizations/cancellations_by_time.png
+- Weather impact: visualizations/cancellations_by_weather.png
+- Airline analysis: visualizations/cancellations_by_distance_airline.png
+- Feature importance: visualizations/feature_importance.png
+- Model comparisons: visualizations/model_comparison_all_metrics.png
+
+Report generated on 2023-04-05
