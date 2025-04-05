@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Cancellation Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .image-caption {
+            text-align: center;
+            font-style: italic;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Naive Bayes Model to Predict Flight Cancellations</h1>
+<p>The aviation industry is dynamic with various variables impacting flight operations. A prominent airline company in the Pacific Northwest has accumulated extensive data related to flights and weather patterns and needs to understand the factors influencing the departure delays and cancellations to benefit both airlines and passengers. These datasets provide comprehensive information on flights departing in the first half of 2022 from both of the two major airports in this region: SEA (Seattle-Tacoma International Airport) and PDX (Portland International Airport):</p>
+<p>This project seeks to analyze the <code>flights2022.csv</code> dataset containing <em>111,006</em> flight records and <em>29</em> fields.</p>
+<h2>Dataset Description</h2>
+<p>The dataset contains the following variables:</p>
+<p>| <em></em>Column<em></em>           | <em></em>Data Type<em></em> | <em></em>Description<em></em>                                                                                                 | <em></em>Example Values<em></em>                 |
+|----------------------|---------------|-----------------------------------------------------------------------------------------------------------------|------------------------------------|
+| <em></em>year<em></em>             | int64         | Calendar year of the flight.                                                                                    | 2022                               |
+| <em></em>month<em></em>            | int64         | Month of the flight (1–12).                                                                                     | 1, 2, ..., 12                      |
+| <em></em>day<em></em>              | int64         | Day of the month (1–31).                                                                                        | 1, 2, 3, ...                       |
+| <em></em>dep_time<em></em>         | float64       | Actual departure time in "HHMM" format (no colon). NA = cancelled flight.                                       | 1.0, 10.0, 25.0, 1305.0            |
+| <em></em>sched_dep_time<em></em>   | int64         | Scheduled departure time in "HHMM" format.                                                                      | 2359, 2250, 2355                   |
+| <em></em>dep_delay<em></em>        | float64       | Departure delay in minutes. Positive values = minutes late, negative = minutes early, zero = on time.           | 2.0, 71.0, 15.0                    |
+| <em></em>arr_time<em></em>         | float64       | Actual arrival time in "HHMM" format (float).                                                                   | 604.0, 242.0, 759.0                |
+| <em></em>sched_arr_time<em></em>   | int64         | Scheduled arrival time in "HHMM" format.                                                                        | 618, 142, 730                      |
+| <em></em>arr_delay<em></em>        | float64       | Arrival delay in minutes. Positive = late arrival, negative = early arrival.                                    | -14.0, 60.0, 29.0                  |
+| <em></em>carrier<em></em>          | object        | Two-letter airline carrier code.                                                                                | "UA", "AS", "AA"                   |
+| <em></em>flight<em></em>           | int64         | Flight number assigned by the carrier.                                                                          | 1545, 15, 43                       |
+| <em></em>tailnum<em></em>          | object        | Aircraft tail number (unique plane identifier).                                                                 | "N738MA", "N419AS"                 |
+| <em></em>origin<em></em>           | object        | Origin airport where flight starts (IATA code).                                                                 | "JFK", "LGA", "EWR"                |
+| <em></em>dest<em></em>             | object        | Destination airport where flight lands (IATA code).                                                             | "SEA", "SFO", "ORD"                |
+| <em></em>air_time<em></em>         | float64       | Flight time in the air (minutes).                                                                               | 300.0, 200.0, etc.                 |
+| <em></em>distance<em></em>         | int64         | Distance between airports (miles).                                                                              | 250, 800, 2475                     |
+| <em></em>hour<em></em>             | int64         | Extracted hour portion of scheduled departure time (0–23).                                                      | 23, 22, etc.                       |
+| <em></em>minute<em></em>           | int64         | Extracted minute portion of scheduled departure time (0–59).                                                    | 59, 50, etc.                       |
+| <em></em>time_hour<em></em>        | object        | Date/Time Recorded.                                                                                            | "2022-01-01 23:00:00"              |
+| <em></em>airline<em></em>          | object        | Carrier/airline name.                                                                                           | "United Air Lines Inc.", "Alaska Airlines Inc." |
+| <em></em>temp<em></em>             | float64       | Recorded temperature (in Fahrenheit) at the origin airport (from weather data).                                 | 33.0, 32.0, etc.                   |
+| <em></em>dewp<em></em>             | float64       | Dew Point Temperature (in degrees Fahrenheit).                                                                  | 23.0, 19.0, etc.                   |
+| <em></em>humid<em></em>            | float64       | Relative humidity percentage.                                                                                  | 66.06, 69.04, etc.                 |
+| <em></em>wind_dir<em></em>         | float64       | Wind direction (in degrees, 0–360).                                                                             | 160.0, 170.0, etc.                 |
+| <em></em>wind_speed<em></em>       | float64       | Wind speed (in mph).                                                                                            | 8.05546, 9.20624, etc.             |
+| <em></em>wind_gust<em></em>        | float64       | Wind gust speed (in mph).                                                                                       | 9.270062, 10.594357, etc.          |
+| <em></em>precip<em></em>           | float64       | Precipitation (in inches) recorded at departure airport.                                                        | 0.0, 0.5, etc.                     |
+| <em></em>pressure<em></em>         | float64       | Atmospheric Pressure (in hPa).                                                                                 | 1022.9, 1023.4, etc.               |
+| <em></em>visib<em></em>            | float64       | Visibility (in miles).                                                                                          | 10.0, 4.0, etc.                    |</p>
+<p></p>
+<h2>Arrival & Departure Delay Deep-Dive <br></h2>
+<!-- <img src="./Top-9-Dep-Delay.png" alt="Top 9 Routes by Highest Avg Departure Delay" style="max-width:100%;">
+<img src="./Top-9-Cancellations.png" alt="Top 9 Airlines by No. Cancellations" style="max-width:100%;"> -->
+<img src="./images/initial_insights/dep-arr-delay-dow.png" alt="Departure & Arrival Average Delay Over Time" style="max-width:100%;">
+<img src="./images/initial_insights/dep-arr-delay-ot.png" alt="Departure & Arrival Average Delay By Day of Week" style="max-width:100%;">
+<img src="./images/initial_insights/top-5-arr-dest.png" alt="Top 5 Destinations with Highest Average Arrival Delay" style="max-width:100%;">
+<img src="./images/initial_insights/org-dep.png" alt="Average Departure Delay By Origins" style="max-width:100%;">
+<img src="./images/initial_insights/flights-by-month.png" alt="Number of Flights by Month" style="max-width:100%;">
+<img src="./images/initial_insights/top-5-routes-dur-diff.png" alt="Top 5 Routes with Highest Average Duration Difference" style="max-width:100%;">
+<p>
+<h3>Key Findings from Analysis</h3>
+- The dataset contains <em></em>110,878 flight records<em></em> with a <em></em>cancellation rate of 2.09%<em></em>
+- Weather factors significantly impact cancellations, particularly humidity, pressure, and precipitation
+- Different airlines show varying cancellation rates, suggesting differences in operational robustness
+- Seasonal patterns exist in cancellation rates, with certain months showing higher rates
+- Flight duration and air time are strong predictors of cancellations, suggesting longer flights may be more prone to cancellation
+- Arrival and departure delays strongly correlate with cancellations, indicating that operational disruptions tend to cascade</p>
+<p>
+<h2>II. Cancellation Rate Deep-Dive <br></h2></p>
+<h3>Routes & Airlines Analysis</h3>
+<img src="./images/initial_insights/top-5-cancel-route.png" alt="Top 5 Routes with Highest Cancellation Rate" style="max-width:100%;">
+<img src="./images/initial_insights/top-5-cancel-airline.png" alt="Top 5 Airlines with Highest Cancellation Rate" style="max-width:100%;">
+<h3>Time-Based Patterns</h3>
+Flight cancellations show distinct patterns across different time dimensions, including months, days of the week, and hours of the day. These patterns provide insights into operational challenges and potential factors affecting cancellations.
+<p>
+<img src="./visualizations/cancellations_by_time.png" alt="Cancellations by Time" style="max-width:100%;">
+<em>Cancellation rates by month, day of week, hour, and season</em></p>
+<h3>Weather Impact Analysis</h3>
+Weather conditions significantly impact flight operations. The analysis examines how different weather factors, such as temperature, visibility, precipitation, and wind, correlate with flight cancellations.
+<p>
+<img src="./visualizations/cancellations_by_weather.png" alt="Cancellations by Weather" style="max-width:100%;">
+<em>Relationship between weather conditions and cancellation rates</em></p>
+<h3>Distance and Airline Analysis</h3>
+Different airlines have varying operational practices and fleet characteristics, resulting in different cancellation rates. Similarly, flight distance can affect cancellation probabilities due to operational complexity and exposure to changing weather conditions along the route.
+<p>
+<img src="./visualizations/cancellations_by_distance_airline.png" alt="Cancellations by Distance and Airline" style="max-width:100%;">
+<em>Cancellation rates by flight distance and top airlines</em></p>
+<h2>III. Predictive Modeling for Flight Cancellations</h2>
+<h3>Feature Importance Analysis</h3>
+<img src="./visualizations/feature_importance.png" alt="Feature Importance" style="max-width:100%;">
+<em>Top features for predicting flight cancellations using Random Forest model</em>
+<p>The feature importance analysis highlights that distance, pressure, and humid are the most influential factors in predicting flight cancellations.</p>
+<h3>Model Performance Comparison</h3>
+We evaluated multiple machine learning models for their ability to predict flight cancellations using cross-validation with multiple performance metrics:
+<img src="./visualizations/model_comparison_all_metrics.png" alt="Model Comparison - All Metrics" style="max-width:100%;">
+<em>Detailed performance metrics across different models</em>
+<p>While all models achieve high accuracy due to class imbalance in the dataset (very few flights are cancelled compared to those that operate normally), the F1-Score provides a more balanced assessment of model performance.</p>
+<h3>Combined Metrics Analysis</h3>
+<img src="./visualizations/model_comparison_metrics_combined.png" alt="Model Comparison - Combined Metrics" style="max-width:100%;">
+<em>Side-by-side comparison of all performance metrics by model</em>
+<p>This visualization demonstrates that despite high accuracy across all models, there are significant differences in precision, recall, and F1-Score, which are more important metrics for imbalanced classification problems like flight cancellation prediction.</p>
+<h3>Detailed Model Evaluation with Confusion Matrices</h3>
+<h4>Naive Bayes</h4>
+<img src="./visualizations/confusion_matrix_naive_bayes.png" alt="Confusion Matrix - Naive Bayes" style="max-width:100%;">
+<em>Confusion matrix for Naive Bayes model</em>
+<p>The Naive Bayes model provides a reasonable baseline with better recall than other models but suffers from lower precision, resulting in many false positives.</p>
+<h4>Random Forest</h4>
+<img src="./visualizations/confusion_matrix_random_forest.png" alt="Confusion Matrix - Random Forest" style="max-width:100%;">
+<em>Confusion matrix for Random Forest model</em>
+<p>Random Forest achieves the best overall performance with the highest F1-Score, providing a good balance between precision and recall for flight cancellation prediction.</p>
+<h4>Gradient Boosting</h4>
+<img src="./visualizations/confusion_matrix_gradient_boosting.png" alt="Confusion Matrix - Gradient Boosting" style="max-width:100%;">
+<em>Confusion matrix for Gradient Boosting model</em>
+<p>Gradient Boosting achieves high accuracy and precision but suffers from extremely low recall, resulting in a very low F1-Score.</p>
+<h4>Logistic Regression</h4>
+<img src="./visualizations/confusion_matrix_logistic_regression.png" alt="Confusion Matrix - Logistic Regression" style="max-width:100%;">
+<em>Confusion matrix for Logistic Regression model</em>
+<p>Logistic Regression yields zero precision, recall, and F1-Score despite high accuracy, highlighting the limitation of accuracy as a metric for imbalanced datasets.</p>
+<h3>Performance Metrics Summary</h3>
+Based on cross-validation results across multiple metrics:
+<p>| Model | Accuracy | Precision | Recall | F1-Score |
+|-------|----------|-----------|--------|----------|
+| Naive Bayes | 0.9591 | 0.0581 | 0.0634 | 0.0606 |
+| Random Forest | 0.9764 | 0.3711 | 0.1896 | 0.2509 |
+| Gradient Boosting | 0.9791 | 0.0800 | 0.0011 | 0.0021 |
+| Logistic Regression | 0.9792 | 0.0000 | 0.0000 | 0.0000 |</p>
+<em></em>Best Performing Model:<em></em> Random Forest with an F1-Score of 0.2509, providing the most balanced performance between precision and recall for flight cancellation prediction.
+<h3>Conclusion</h3>
+The analysis reveals the challenge of predicting rare events like flight cancellations, which occur in only about 2% of flights in our dataset. While all models achieve high accuracy due to this class imbalance, the Random Forest model provides the best overall performance when considering the more meaningful F1-Score metric.
+<p>The feature importance analysis confirms that weather-related factors (particularly pressure and visibility) along with flight distance are the most critical predictors, highlighting areas where airlines can focus their operational improvements to minimize cancellations.</p>
+<p>It's worth noting that even with the best model, the relatively low F1-Score (0.2509) indicates that predicting flight cancellations remains challenging, likely due to the complex and sometimes unpredictable nature of factors contributing to cancellations. Future work could explore ensemble approaches, additional feature engineering, or addressing the class imbalance through techniques like oversampling or undersampling.</p>
+<h3>Advanced Modeling</h3>
+TODO:
+1. Feature engineering (creating weather severity features, time-based features, and distance categories)
+2. Hyperparameter tuning for the best-performing models
+3. ROC curve and Precision-Recall curve analysis
+<p>Tree-based models (Random Forest and Gradient Boosting) generally performed best, with enhanced features and hyperparameter tuning providing additional improvements.</p>
+<h2>IV. Recommendations</h2>
+<h3>Operational Recommendations</h3>
+- <em></em>Proactive Delay Management:<em></em> Since delays correlate strongly with cancellations, implementing more effective delay management strategies could help reduce cancellation rates
+- <em></em>Weather-Based Planning:<em></em> Develop more sophisticated weather contingency plans, particularly focusing on humidity, precipitation, and pressure changes
+- <em></em>Airline-Specific Strategies:<em></em> Airlines with higher cancellation rates should analyze their operations to identify specific areas for improvement
+- <em></em>Seasonal Preparedness:<em></em> Allocate additional resources during seasons with historically higher cancellation rates
+- <em></em>Enhanced Predictive Systems:<em></em> Implement machine learning models (particularly Random Forest or Gradient Boosting) for early cancellation prediction to improve passenger notification and resource reallocation
+<h3>Further Research Opportunities</h3>
+- Develop more detailed analysis of specific routes and airports to identify localized cancellation patterns
+- Investigate the relationship between aircraft type and cancellation probability
+- Explore the impact of staffing levels and crew scheduling on cancellation rates
+- Analyze the economic impact of different cancellation prediction and management strategies
+<p></p>
+</body>
+</html>
