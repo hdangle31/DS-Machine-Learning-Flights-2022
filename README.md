@@ -40,19 +40,34 @@ The dataset contains the following variables:
 | **pressure**         | float64       | Atmospheric Pressure (in hPa).                                                                                 | 1022.9, 1023.4, etc.               |
 | **visib**            | float64       | Visibility (in miles).                                                                                          | 10.0, 4.0, etc.                    |
 
+## Table of Contents
 
+- [Analyzing Flight Patterns Using Supervised ML Algorithm](#analyzing-flight-patterns-using-supervised-ml-algorithm)
+  - [Dataset Description](#dataset-description)
+  - [Table of Contents](#table-of-contents)
+  - [I. Arrival \& Departure Delay Deep-Dive ](#i-arrival--departure-delay-deep-dive-)
+    - [Key Findings from Analysis](#key-findings-from-analysis)
+  - [II. Cancellation Rate Deep-Dive ](#ii-cancellation-rate-deep-dive-)
+    - [Routes \& Airlines Analysis](#routes--airlines-analysis)
+    - [Time-Based Patterns](#time-based-patterns)
+    - [Weather Impact Analysis](#weather-impact-analysis)
+    - [Distance and Airline Analysis](#distance-and-airline-analysis)
+  - [III. Predictive Modeling for Flight Cancellations](#iii-predictive-modeling-for-flight-cancellations)
+    - [Feature Importance Analysis](#feature-importance-analysis)
+    - [Model Performance Comparison](#model-performance-comparison)
+    - [Detailed Model Evaluation with Confusion Matrices](#detailed-model-evaluation-with-confusion-matrices)
+      - [Naive Bayes](#naive-bayes)
+      - [Random Forest](#random-forest)
+      - [Gradient Boosting](#gradient-boosting)
+      - [Logistic Regression](#logistic-regression)
+    - [Performance Metrics Summary](#performance-metrics-summary)
+    - [Conclusion](#conclusion)
+    - [Advanced Modeling](#advanced-modeling)
+  - [IV. Recommendations](#iv-recommendations)
+    - [Operational Recommendations](#operational-recommendations)
+    - [Further Research Opportunities](#further-research-opportunities)
 
-## Arrival & Departure Delay Deep-Dive <br>
-<!-- ![Top 9 Routes by Highest Avg Departure Delay](./Top-9-Dep-Delay.png)
-![Top 9 Airlines by No. Cancellations](./Top-9-Cancellations.png) -->
-
-![Departure & Arrival Average Delay Over Time](./insights/initial_insights/dep-arr-delay-dow.png)
-![Departure & Arrival Average Delay By Day of Week](./insights/initial_insights/dep-arr-delay-ot.png)
-![Top 5 Destinations with Highest Average Arrival Delay](./insights/initial_insights/top-5-arr-dest.png)
-![Average Departure Delay By Origins](./insights/initial_insights/org-dep.png)
-![Number of Flights by Month](./insights/initial_insights/flights-by-month.png)
-![Top 5 Routes with Highest Average Duration Difference](./insights/initial_insights/top-5-routes-dur-diff.png)
-
+## I. Arrival & Departure Delay Deep-Dive <br>
 
 ### Key Findings from Analysis
 - The transformed dataset contains **110,878 flight records** with a **cancellation rate of 2.09%**
@@ -62,6 +77,14 @@ The dataset contains the following variables:
 - Planes departing to **DSM** records highest number of arrival delays, at **32 minutes and 30 seconds** on average
 - Flights from **PDX** on average performs better than from **SEA** with **54 seconds** difference in **departure delay** 
 - Flights from **PDX to GRR** are recorded to have highest deviation of estimated duration to scheduled duration, at **55 minutes and 12 seconds**
+
+![Departure & Arrival Average Delay Over Time](./insights/initial_insights/dep-arr-delay-dow.png)
+![Departure & Arrival Average Delay By Day of Week](./insights/initial_insights/dep-arr-delay-ot.png)
+![Top 5 Destinations with Highest Average Arrival Delay](./insights/initial_insights/top-5-arr-dest.png)
+![Average Departure Delay By Origins](./insights/initial_insights/org-dep.png)
+![Number of Flights by Month](./insights/initial_insights/flights-by-month.png)
+![Top 5 Routes with Highest Average Duration Difference](./insights/initial_insights/top-5-routes-dur-diff.png)
+
 
 
 ## II. Cancellation Rate Deep-Dive <br>
@@ -100,18 +123,10 @@ Different airlines have varying operational practices and fleet characteristics,
 The feature importance analysis highlights that distance, pressure, and humid are the most influential factors in predicting flight cancellations.
 
 ### Model Performance Comparison
-We evaluated multiple machine learning models for their ability to predict flight cancellations using cross-validation with multiple performance metrics:
-
-![Model Comparison - All Metrics](./visualizations/model_comparison_all_metrics.png)
-*Detailed performance metrics across different models*
-
-While all models achieve high accuracy due to class imbalance in the dataset (very few flights are cancelled compared to those that operate normally), the F1-Score provides a more balanced assessment of model performance.
-
-### Combined Metrics Analysis
 ![Model Comparison - Combined Metrics](./visualizations/model_comparison_metrics_combined.png)
 *Side-by-side comparison of all performance metrics by model*
 
-This visualization demonstrates that despite high accuracy across all models, there are significant differences in precision, recall, and F1-Score, which are more important metrics for imbalanced classification problems like flight cancellation prediction.
+We evaluated multiple machine learning models for their ability to predict flight cancellations using cross-validation with multiple performance metrics (accuracy, precision, recall, and F1-Score). While all models achieve high accuracy due to class imbalance in the dataset (very few flights are cancelled compared to those that operate normally), there are significant differences in precision, recall, and F1-Score, which are more important metrics for imbalanced classification problems like flight cancellation prediction.
 
 ### Detailed Model Evaluation with Confusion Matrices
 
