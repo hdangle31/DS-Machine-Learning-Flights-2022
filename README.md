@@ -4,7 +4,7 @@ The aviation industry is dynamic with various variables impacting flight operati
 
 This project seeks to analyze the `flights2022.csv` dataset containing *111,006* flight records and *29* fields.
 
-## Dataset Description
+# Dataset Description
 
 The dataset contains the following variables:
 
@@ -40,34 +40,73 @@ The dataset contains the following variables:
 | **pressure**         | float64       | Atmospheric Pressure (in hPa).                                                                                 | 1022.9, 1023.4, etc.               |
 | **visib**            | float64       | Visibility (in miles).                                                                                          | 10.0, 4.0, etc.                    |
 
-## Table of Contents
+# Table of Contents
 
 - [Analyzing Flight Patterns Using Supervised ML Algorithm](#analyzing-flight-patterns-using-supervised-ml-algorithm)
-  - [Dataset Description](#dataset-description)
-  - [Table of Contents](#table-of-contents)
-  - [I. Arrival \& Departure Delay Deep-Dive ](#i-arrival--departure-delay-deep-dive-)
+- [Dataset Description](#dataset-description)
+- [Table of Contents](#table-of-contents)
+  - [I. Data Processing and Methodology](#i-data-processing-and-methodology)
+    - [Data Cleaning and Preprocessing](#data-cleaning-and-preprocessing)
+      - [1. Handling Missing Values](#1-handling-missing-values)
+      - [2. Time Format Standardization](#2-time-format-standardization)
+      - [3. Feature Engineering](#3-feature-engineering)
+  - [II. Arrival \& Departure Delay Deep-Dive ](#ii-arrival--departure-delay-deep-dive-)
     - [Key Findings from Analysis](#key-findings-from-analysis)
-  - [II. Cancellation Rate Deep-Dive ](#ii-cancellation-rate-deep-dive-)
-    - [Routes \& Airlines Analysis](#routes--airlines-analysis)
-    - [Time-Based Patterns](#time-based-patterns)
-    - [Weather Impact Analysis](#weather-impact-analysis)
-    - [Distance and Airline Analysis](#distance-and-airline-analysis)
   - [III. Predictive Modeling for Flight Cancellations](#iii-predictive-modeling-for-flight-cancellations)
+    - [Modeling Approach](#modeling-approach)
+    - [Evaluation Metrics](#evaluation-metrics)
+    - [Phase 1 - Initial Run with Default Parameters](#phase-1---initial-run-with-default-parameters)
+    - [Phase 2 - Fine-tuning Hyperparameters to Address Class Imbalance](#phase-2---fine-tuning-hyperparameters-to-address-class-imbalance)
+    - [Techniques to Address Class Imbalance](#techniques-to-address-class-imbalance)
+      - [Stratified Cross-Validation](#stratified-cross-validation)
+      - [Resampling Methods](#resampling-methods)
+      - [Class Weighting](#class-weighting)
+      - [Perfomance Metrics After Hyperparameters Fine-tuning](#perfomance-metrics-after-hyperparameters-fine-tuning)
     - [Feature Importance Analysis](#feature-importance-analysis)
-    - [Model Performance Comparison](#model-performance-comparison)
-    - [Detailed Model Evaluation with Confusion Matrices](#detailed-model-evaluation-with-confusion-matrices)
-      - [Naive Bayes](#naive-bayes)
-      - [Random Forest](#random-forest)
-      - [Gradient Boosting](#gradient-boosting)
-      - [Logistic Regression](#logistic-regression)
-    - [Performance Metrics Summary](#performance-metrics-summary)
-    - [Conclusion](#conclusion)
-    - [Advanced Modeling](#advanced-modeling)
-  - [IV. Recommendations](#iv-recommendations)
-    - [Operational Recommendations](#operational-recommendations)
-    - [Further Research Opportunities](#further-research-opportunities)
+    - [Detailed Model Evaluation](#detailed-model-evaluation)
+    - [Model Performance Comparison (Cross-Validation)](#model-performance-comparison-cross-validation)
+    - [Model Performance Comparison (Test Set)](#model-performance-comparison-test-set)
+    - [Best Performing Model Based on AUC](#best-performing-model-based-on-auc)
+    - [Insights](#insights)
+      - [Model Recommendations](#model-recommendations)
+      - [Recommendations Based on Business Goals](#recommendations-based-on-business-goals)
+  - [IV. Further Enhancing Considerations](#iv-further-enhancing-considerations)
+      - [Feature Engineering](#feature-engineering)
+      - [Potential Overfitting](#potential-overfitting)
+      - [Threshold Adjustment](#threshold-adjustment)
+  - [V. Conclusion](#v-conclusion)
 
-## I. Arrival & Departure Delay Deep-Dive <br>
+## I. Data Processing and Methodology
+
+### Data Cleaning and Preprocessing
+
+#### 1. Handling Missing Values
+The dataset contained various types of missing values, which were addressed using different strategies:
+
+- **Flight Cancellations:** Missing values in `dep_time` indicated cancelled flights (1.3% of records). These were preserved as they represent a key target variable.
+- **Tailnum:** Records with missing aircraft identifiers (0.12% of records) were removed, as they constituted a negligible portion of the data.
+- **Weather Data:** Missing values in `wind_dir`, `wind_speed`, and `wind_gust` were imputed using a KNN Imputer with `n_neighbors=5` and distance-weighted averaging to maintain relationships between weather variables.
+
+#### 2. Time Format Standardization
+[Standardizing time formats and resolving day transition issues](./notebooks/Flights_Project.ipynb) were critical preprocessing steps.
+
+- **Datetime Conversion:** Transformed `HHMM`-formatted times into proper datetime objects, accounting for date transitions.
+- **Day Transition Handling:** Addressed flights crossing midnight using logical rules:
+  - Adjusted departure times based on `dep_delay` values.
+  - Corrected arrival times using factors such as `dep_time`, `air_time`, and `arr_delay`.
+  - Handled special cases requiring multiple condition adjustments.
+  - Applied specific handling for midnight (`24:00`) departure times.
+
+#### 3. Feature Engineering
+New features were created to enhance model performance and support exploratory analysis:
+
+- **Time-Based Features:** `day_of_week`, `is_weekend`, `is_holiday`, `month_name`, `season`.
+- **Flight Metrics:** `flight_duration`, `scheduled_duration`, `duration_difference`.
+- **Categorical Features:** `route` (origin-destination pair).
+- **Binary Flags:** `cancel` (derived from NA values in `dep_time`).
+
+
+## II. Arrival & Departure Delay Deep-Dive <br>
 
 ### Key Findings from Analysis
 - The transformed dataset contains **110,878 flight records** with a **cancellation rate of 2.09%**
@@ -85,7 +124,7 @@ The dataset contains the following variables:
 ![Number of Flights by Month](./insights/initial_insights/flights-by-month.png)
 ![Top 5 Routes with Highest Average Duration Difference](./insights/initial_insights/top-5-routes-dur-diff.png)
 
-
+<!-- 
 
 ## II. Cancellation Rate Deep-Dive <br>
 
@@ -112,9 +151,54 @@ Different airlines have varying operational practices and fleet characteristics,
 
 
 ![Cancellations by Distance and Airline](./visualizations/cancellations_by_distance_airline.png)
-*Cancellation rates by flight distance and top airlines*
+*Cancellation rates by flight distance and top airlines* -->
 
 ## III. Predictive Modeling for Flight Cancellations
+
+### Modeling Approach
+The primary modeling task was predicting flight cancellations using weather and flight-specific features. Models were evaluated using **train/test/validation** approach and multiple performance metrics:
+
+
+![Train/Test/Validation](image.png)
+### Evaluation Metrics
+
+- **Accuracy:** Measures overall correctness but can be misleading for imbalanced datasets.
+- **Precision:** Proportion of predicted cancellations that were actual cancellations.
+- **Recall:** Proportion of actual cancellations correctly identified by the model.
+- **F1-Score:** Harmonic mean of precision and recall, balancing the two metrics.
+- **AUC-ROC:** Area under the Receiver Operating Characteristic curve, indicating the model's ability to distinguish between classes.
+
+### Phase 1 - Initial Run with Default Parameters
+![Model Comparison - Combined Metrics](./visualizations/FINAL_init_run_output.png)
+*Side-by-side comparison of all performance metrics on training data in initial run by model*
+
+I evaluated multiple machine learning models for their ability to predict flight cancellations using cross-validation with multiple performance metrics (accuracy, precision, recall, and F1-Score). While all models achieve high accuracy due to class imbalance in the dataset (very few flights are cancelled compared to those that operate normally), there are significant differences in precision, recall, and F1-Score, which are more important metrics for imbalanced classification problems like flight cancellation prediction.
+
+### Phase 2 - Fine-tuning Hyperparameters to Address Class Imbalance
+### Techniques to Address Class Imbalance
+
+To tackle the class imbalance problem in the dataset, the following techniques were employed:
+<!-- ![Imbalance Handling](hyperparam.png) -->
+![Imbalance Handling text](./visualizations/image.png)
+#### Stratified Cross-Validation
+- **StratifiedKFold:** Utilized StratifiedKFold with 5 splits to ensure the class distribution was maintained across all folds during cross-validation.
+
+#### Resampling Methods
+- **SMOTE (Synthetic Minority Over-sampling Technique):** Generated synthetic examples for the minority class to balance the dataset.
+- **SMOTETomek:** Combined SMOTE with Tomek links to oversample the minority class while cleaning boundary samples.
+- **SMOTEENN:** Combined Over and Under Sampling using SMOTE and Edited Nearest Neighbors. 
+- **RandomOverSampler:** Performed simple oversampling of the minority class.
+- **RandomUnderSampler:** Reduced the size of the majority class by randomly undersampling.
+
+#### Class Weighting
+- **Algorithm-Specific Weighting:**
+  - Applied `class_weight='balanced'` for Random Forest and Logistic Regression.
+  - Used the `scale_pos_weight` parameter in XGBoost to adjust for class imbalance.
+  - Used `subsample` = 0.8 to introduce randomness, reduce overfitting by giving the minority class samples a better chance of being inflential and `loss` = log_loss to penalize incorrect predictions in Gradient Boosted Trees.
+
+#### Perfomance Metrics After Hyperparameters Fine-tuning 
+![SMOTEENN Train Score](./visualizations/FINAL_SMOTEENN_train_output.png)
+*Side-by-side comparison of all performance metrics on training data after resampling with SMOTEENN*
 
 ### Feature Importance Analysis
 ![Feature Importance](./visualizations/feature_importance.png)
@@ -122,15 +206,9 @@ Different airlines have varying operational practices and fleet characteristics,
 
 The feature importance analysis highlights that distance, pressure, and humid are the most influential factors in predicting flight cancellations.
 
-### Model Performance Comparison
-![Model Comparison - Combined Metrics](./visualizations/model_comparison_metrics_combined.png)
-*Side-by-side comparison of all performance metrics by model*
+<!-- ### Detailed Model Evaluation with Confusion Matrices -->
 
-We evaluated multiple machine learning models for their ability to predict flight cancellations using cross-validation with multiple performance metrics (accuracy, precision, recall, and F1-Score). While all models achieve high accuracy due to class imbalance in the dataset (very few flights are cancelled compared to those that operate normally), there are significant differences in precision, recall, and F1-Score, which are more important metrics for imbalanced classification problems like flight cancellation prediction.
-
-### Detailed Model Evaluation with Confusion Matrices
-
-#### Naive Bayes
+<!-- #### Naive Bayes
 ![Confusion Matrix - Naive Bayes](./visualizations/confusion_matrix_naive_bayes.png)
 *Confusion matrix for Naive Bayes model*
 
@@ -152,36 +230,104 @@ Gradient Boosting achieves high accuracy and precision but suffers from extremel
 ![Confusion Matrix - Logistic Regression](./visualizations/confusion_matrix_logistic_regression.png)
 *Confusion matrix for Logistic Regression model*
 
-Logistic Regression yields zero precision, recall, and F1-Score despite high accuracy, highlighting the limitation of accuracy as a metric for imbalanced datasets.
+Logistic Regression yields zero precision, recall, and F1-Score despite high accuracy, highlighting the limitation of accuracy as a metric for imbalanced datasets. -->
 
-### Performance Metrics Summary
-Based on cross-validation results across multiple metrics:
+### Detailed Model Evaluation
 
-| Model | Accuracy | Precision | Recall | F1-Score |
-|-------|----------|-----------|--------|----------|
-| Naive Bayes | 0.9591 | 0.0581 | 0.0634 | 0.0606 |
-| Random Forest | 0.9764 | 0.3711 | 0.1896 | 0.2509 |
-| Gradient Boosting | 0.9791 | 0.0800 | 0.0011 | 0.0021 |
-| Logistic Regression | 0.9792 | 0.0000 | 0.0000 | 0.0000 |
+[After trials and errors (Summary_Performance_Metrics.pdf)](./Summary_Performance_Metrics.pdf) in experimenting with different hyperparameters, it turns out that using SMOTEENN with class weight yields the highest F-1 score. Below is a detailed snapshot of the performance metrics across multiple models.
 
-**Best Performing Model:** Random Forest with an F1-Score of 0.2509, providing the most balanced performance between precision and recall for flight cancellation prediction.
+### Model Performance Comparison (Cross-Validation)
 
-### Conclusion
-The analysis reveals the challenge of predicting rare events like flight cancellations, which occur in only about 2% of flights in our dataset. While all models achieve high accuracy due to this class imbalance, the Random Forest model provides the best overall performance when considering the more meaningful F1-Score metric.
+| **Model**            | **Accuracy** | **Precision** | **Recall** | **F1-Score** |
+|-----------------------|--------------|---------------|------------|--------------|
+| Naive Bayes          | 0.6115       | 0.6338        | 0.5591     | 0.5941       |
+| Random Forest        | 0.9957       | 0.9982        | 0.9934     | 0.9958       |
+| Gradient Boosting    | 0.8353       | 0.8197        | 0.8667     | 0.8426       |
+| XGBoost              | 0.8756       | 0.8042        | 0.9984     | 0.8909       |
+| Logistic Regression  | 0.6379       | 0.6389        | 0.6622     | 0.6503       |
 
-The feature importance analysis confirms that weather-related factors (particularly pressure and visibility) along with flight distance are the most critical predictors, highlighting areas where airlines can focus their operational improvements to minimize cancellations.
+### Model Performance Comparison (Test Set)
 
-It's worth noting that even with the best model, the relatively low F1-Score (0.2509) indicates that predicting flight cancellations remains challenging, likely due to the complex and sometimes unpredictable nature of factors contributing to cancellations. Future work could explore ensemble approaches, additional feature engineering, or addressing the class imbalance through techniques like oversampling or undersampling.
+| **Model**            | **Accuracy** | **Precision** | **Recall** | **F1-Score** |
+|-----------------------|--------------|---------------|------------|--------------|
+| Naive Bayes          | 0.6492       | 0.0339        | 0.5708     | 0.0640       |
+| Random Forest        | 0.9569       | 0.2225        | 0.4206     | 0.2910       |
+| Gradient Boosting    | 0.7700       | 0.0524        | 0.5815     | 0.0961       |
+| XGBoost              | 0.7185       | 0.0569        | 0.7961     | 0.1062       |
+| Logistic Regression  | 0.5953       | 0.0324        | 0.6330     | 0.0617       |
 
-### Advanced Modeling
-TODO:
-1. Feature engineering (creating weather severity features, time-based features, and distance categories)
-2. Hyperparameter tuning for the best-performing models
-3. ROC curve and Precision-Recall curve analysis
+### Best Performing Model Based on AUC
+![ROC](./visualizations/FINAL_ROC_test.png)
 
-Tree-based models (Random Forest and Gradient Boosting) generally performed best, with enhanced features and hyperparameter tuning providing additional improvements.
+On final testing evaluation, **XGBoost** achieved the highest AUC score of **0.8251**, making it the best-performing model in terms of distinguishing between classes.
 
-## IV. Recommendations
+
+### Insights
+
+Resampling techniques such as SMOTE and random over/undersampling generally improve recall but may reduce precision. The choice of method depends on whether the priority is minimizing false negatives (higher recall) or false positives (higher precision).
+
+Parameter tuning (e.g., `scale_pos_weight`, `class_weight`, `subsample`) can significantly enhance model performance but often shifts the trade-off between recall and precision. Additionally, fine-tuning the decision threshold (e.g., adjusting the probability cutoff in XGBoost or Random Forest) is crucial for optimizing metrics like F1-Score or recall in practice.
+
+#### Model Recommendations
+The choice of the best model depends on the specific criteria valued by stakeholders. Below are the top-performing models based on different metrics:
+
+- **Best Test-Set AUC:**  
+  - **Model:** XGBoost (Default, no resampling)  
+  - **AUC:** 0.8517  
+
+- **Best Test-Set F1-Score:**  
+  - **Model:** Random Forest + SMOTEENN  
+  - **F1-Score:** 0.291  
+
+- **Best Test-Set Accuracy:**  
+  - **Model:** XGBoost (Default, no resampling)  
+  - **Accuracy:** 0.979843  
+
+- **Best Test-Set Recall:**  
+  - **Model:** XGBoost + SMOTE + `scale_pos_weight`  
+  - **Recall:** 0.783262  
+
+#### Recommendations Based on Business Goals
+- **Maximizing AUC or Accuracy:**  
+  Deploy **XGBoost (Default)** for its superior AUC and accuracy.
+
+- **Balancing Precision and Recall (F1-Score):**  
+  Use **Random Forest + SMOTEENN** for a more balanced performance.
+
+- **Catching Most Cancellations (Recall):**  
+  Opt for **XGBoost + SMOTE + `scale_pos_weight`** to maximize recall and identify the majority of cancellations.
+
+The final choice should align with the business objective, whether it is minimizing operational disruptions, improving customer satisfaction, or optimizing resource allocation.
+
+
+## IV. Further Enhancing Considerations
+
+#### Feature Engineering
+Analyze and engineer features that are more predictive of the target variable to improve model performance on unseen data:
+  - **Weather Severity Features:** Combine weather variables (e.g., wind speed, precipitation, and visibility) into a single severity index.
+  - **Time-Based Features:** Extract features like season, day of the week, or time of day to capture temporal patterns.
+  - **Distance Categories:** Group flight distances into categories (e.g., short-haul, medium-haul, long-haul) to identify trends based on distance.
+
+#### Potential Overfitting
+- **Observation:** All models show a significant drop in precision when evaluated on the test set compared to cross-validation results.
+- **Implication:** This decline suggests potential overfitting, where models capture noise or patterns specific to the training data that do not generalize well to unseen data.
+- **Mitigation Strategies:**
+  - Use regularization techniques (e.g., L1/L2 regularization).
+  - Increase the size of the training dataset through data augmentation or synthetic data generation.
+  - Simplify the model by reducing the number of features or using feature selection techniques.
+
+#### Threshold Adjustment
+- Adjust the decision threshold to balance precision and recall based on the specific requirements of the application.
+- For example:
+  - Lower the threshold to prioritize recall (e.g., identifying more cancellations).
+  - Raise the threshold to prioritize precision (e.g., reducing false positives).
+
+## V. Conclusion
+The analysis reveals the challenge of predicting rare events like flight cancellations, which occur in only about 2% of flights in our dataset. While all models achieve high accuracy due to this class imbalance, the **Random Forest** model provides the best overall performance when considering the more meaningful F1-Score metric.
+
+The feature importance analysis confirms that flight distance along with weather-related factors (particularly pressure and visibility) are the most critical predictors, highlighting areas where airlines can focus their operational improvements to minimize cancellations.
+
+<!-- ## IV. Recommendations
 
 ### Operational Recommendations
 - **Proactive Delay Management:** Since delays correlate strongly with cancellations, implementing more effective delay management strategies could help reduce cancellation rates
@@ -195,4 +341,4 @@ Tree-based models (Random Forest and Gradient Boosting) generally performed best
 - Investigate the relationship between aircraft type and cancellation probability
 - Explore the impact of staffing levels and crew scheduling on cancellation rates
 - Analyze the economic impact of different cancellation prediction and management strategies
-
+ -->
